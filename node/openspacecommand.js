@@ -1,15 +1,18 @@
 const net = require('net');
-// var HashMap = require('hashmap');
-// global.words_to_actions_map = new HashMap();
-// global.words_to_actions_map.set('zoom in', 'Scale.Scale');
-// global.words_to_actions_map.set('zoom out', 'Scale.Scale');
-// global.words_to_actions_map.set('spin faster', 'Scale.Scale');
-// global.words_to_actions_map.set('spin slower', 'Scale.Scale');
-// global.words_to_actions_map.set('go to mars', 'Mars');
+const http = require('http');
+var util = require('util');
+
+//var HashMap = require('hashmap');
+//global.words_to_actions_map = new HashMap();
+//global.words_to_actions_map.set('zoom in', 'Scale.Scale');
+//global.words_to_actions_map.set('zoom out', 'Scale.Scale');
+//global.words_to_actions_map.set('spin faster', 'Scale.Scale');
+//global.words_to_actions_map.set('spin slower', 'Scale.Scale');
+//global.words_to_actions_map.set('go to mars', 'Mars');
 
 const connection = {
     connect: (onConnected) => {
-        this._client = net.createConnection({ port: 8000 }, () => {
+        this._client = net.createConnection({ host: '10.10.0.122', port: 8000 }, () => {
             console.log('Connected to OpenSpace backend');
             onConnected();
         });
@@ -54,10 +57,14 @@ const connection = {
     }
 }
 
+const hostname = '127.0.0.1';
+const port = 8080;
+//const Asset = 'Scene.Mars';
+setTimeout(() => {}, 10000);
 connection.connect(() => {
     // First, make Earth bigger
-    connection.startTopic('set', {property: 'Scene.Mars.Scale.Scale', value: "2"});
-    console.log("Set value of Mars Scale to 2");
+    connection.startTopic('set', {property: 'Scene.Mars.Scale.Scale', value: "3"});
+    console.log("Set value of Mars Scale to 3");
 
     // Get Earth scale
     setTimeout(() => {
@@ -81,7 +88,7 @@ connection.connect(() => {
 
     // Reset Mars scale
     setTimeout(() => {
-        connection.startTopic('set', {property: 'Scene.Mars.Scale.Scale', value: "1"});
+        connection.startTopic('set', {property: 'Scene.Mars.Scale.Scale', value: "5"});
             console.log("Reset value of Mars Scale");
     }, 300);
 
@@ -101,14 +108,28 @@ connection.connect(() => {
 //        connection.startTopic('luascript', {script: 'openspace.time.interpolateDeltaTime(1, 1);'});
 //    }, 2500);
 
-    setTimeout(() => {
-        connection.disconnect();
-    }, 2600);
+//    setTimeout(() => {
+//        connection.disconnect();
+//    }, 2600);
 });
 
 
+const server = http.createServer((req, res) => {
+	    connection.startTopic('set', {property: 'Scene.Mars.Scale.Scale', value: "5"});
+	    console.log("Set value of Mars Scale to 5");
+	    console.log("req is " + req.url);
+	    util.inspect(req);
+	if((req.url) == '/zoomin') {
+	    connection.startTopic('set', {property: 'Scene.Mars.Scale.Scale', value: "3"});
+	    console.log("Set value of Mars Scale to 3");
+	} else if((req.url) == '/zoomout' ) {
+	    connection.startTopic('set', {property: 'Scene.Mars.Scale.Scale', value: "10"});
+	    console.log("Set value of Mars Scale to 1");
+	}
+});
 
-//text interpreter
-var interpret=function(input){
-    
-}
+
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});
+
