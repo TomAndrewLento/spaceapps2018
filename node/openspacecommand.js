@@ -1,11 +1,11 @@
 const net = require('net');
-var HashMap = require('hashmap');
-global.words_to_actions_map = new HashMap();
-global.words_to_actions_map.set('zoom in', 'Scale.Scale');
-global.words_to_actions_map.set('zoom out', 'Scale.Scale');
-global.words_to_actions_map.set('spin faster', 'Scale.Scale');
-global.words_to_actions_map.set('spin slower', 'Scale.Scale');
-global.words_to_actions_map.set('go to mars', 'Mars');
+// var HashMap = require('hashmap');
+// global.words_to_actions_map = new HashMap();
+// global.words_to_actions_map.set('zoom in', 'Scale.Scale');
+// global.words_to_actions_map.set('zoom out', 'Scale.Scale');
+// global.words_to_actions_map.set('spin faster', 'Scale.Scale');
+// global.words_to_actions_map.set('spin slower', 'Scale.Scale');
+// global.words_to_actions_map.set('go to mars', 'Mars');
 
 const connection = {
     connect: (onConnected) => {
@@ -105,3 +105,10 @@ connection.connect(() => {
         connection.disconnect();
     }, 2600);
 });
+
+
+
+//text interpreter
+var interpret=function(input){
+    
+}
