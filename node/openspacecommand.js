@@ -1,4 +1,11 @@
 const net = require('net');
+var HashMap = require('hashmap');
+global.words_to_actions_map = new HashMap();
+global.words_to_actions_map.set('zoom in', 'Scale.Scale');
+global.words_to_actions_map.set('zoom out', 'Scale.Scale');
+global.words_to_actions_map.set('spin faster', 'Scale.Scale');
+global.words_to_actions_map.set('spin slower', 'Scale.Scale');
+global.words_to_actions_map.set('go to mars', 'Mars');
 
 const connection = {
     connect: (onConnected) => {
@@ -60,7 +67,7 @@ connection.connect(() => {
     }, 100)
 
     let subscriptionTopic = -1;
-    // Subscribe to Earth scale
+    // Subscribe to Mars scale
     setTimeout(() => {
         subscriptionTopic = connection.startTopic(
             'subscribe',
@@ -72,7 +79,7 @@ connection.connect(() => {
         console.log("Subscription topic is " + subscriptionTopic);
     }, 200);
 
-    // Reset Earth scale
+    // Reset Mars scale
     setTimeout(() => {
         connection.startTopic('set', {property: 'Scene.Mars.Scale.Scale', value: "1"});
             console.log("Reset value of Mars Scale");
@@ -85,14 +92,14 @@ connection.connect(() => {
     }, 400);
 
     // Execute script to speed up time
-    setTimeout(() => {
-        connection.startTopic('luascript', {script: 'openspace.time.interpolateDeltaTime(10000, 1);'});
-    }, 500);
+//    setTimeout(() => {
+//        connection.startTopic('luascript', {script: 'openspace.time.interpolateDeltaTime(10000, 1);'});
+//    }, 500);
 
     // Execute script to slow down time
-    setTimeout(() => {
-        connection.startTopic('luascript', {script: 'openspace.time.interpolateDeltaTime(1, 1);'});
-    }, 2500);
+//    setTimeout(() => {
+//        connection.startTopic('luascript', {script: 'openspace.time.interpolateDeltaTime(1, 1);'});
+//    }, 2500);
 
     setTimeout(() => {
         connection.disconnect();
