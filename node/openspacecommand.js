@@ -56,13 +56,13 @@ const connection = {
 
 connection.connect(() => {
     // First, make Earth bigger
-    connection.startTopic('set', {property: 'Scene.Earth.Scale.Scale', value: "2"});
-    console.log("Set value of Earth Scale to 2");
+    connection.startTopic('set', {property: 'Scene.Mars.Scale.Scale', value: "2"});
+    console.log("Set value of Mars Scale to 2");
 
     // Get Earth scale
     setTimeout(() => {
-        connection.startTopic('get', {property: 'Scene.Earth.Scale.Scale'}, (response) => {
-            console.log("Got value of Earth Scale ", response.Value)
+        connection.startTopic('get', {property: 'Scene.Mars.Scale.Scale'}, (response) => {
+            console.log("Got value of Mars Scale ", response.Value)
         });
     }, 100)
 
