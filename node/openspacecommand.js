@@ -122,10 +122,14 @@ const server = http.createServer((req, res) => {
 	if((req.url) == '/zoomin') {
 	    connection.startTopic('set', {property: 'Scene.Mars.Scale.Scale', value: "3"});
 	    console.log("Set value of Mars Scale to 3");
-	} else if((req.url) == '/zoomout' ) {
-	    connection.startTopic('set', {property: 'Scene.Mars.Scale.Scale', value: "10"});
-	    console.log("Set value of Mars Scale to 1");
-	}
+    } else if((req.url) == '/zoomout' ) {
+        connection.startTopic('set', {property: 'Scene.Mars.Scale.Scale', value: "10"});
+        console.log("Set value of Mars Scale to 1");
+    }
+    // } else if((req.url) == '/gotoMoon' || (req.url) == '/gotomoon') {
+    //     connection.startTopic('set',{property: "openspace.navigation.CameraState.Focus", value:"moonAsset.Moon.Identifier"});
+    //     console.log("Moving camera to Moon");
+    // }
 });
 
 
