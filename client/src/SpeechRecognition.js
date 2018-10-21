@@ -35,7 +35,9 @@ export default function SpeechRecognition(options) {
     let pauseAfterDisconnect = false
     let interimTranscript = ''
     let finalTranscript = ''
-
+	  /* Edits */
+	  let lastCommand = '';
+	  /*********/
     return class SpeechRecognitionContainer extends Component {
       constructor(props) {
         super(props)
@@ -43,6 +45,7 @@ export default function SpeechRecognition(options) {
         this.state = {
           interimTranscript,
           finalTranscript,
+			lastCommand,
           listening: false
         }
       }
@@ -58,10 +61,11 @@ export default function SpeechRecognition(options) {
 			if (SpeechGrammarList) {
 				const grammar = `#JSGF V1.0;
 grammar openspace;
-public <command> = <goto> | <zoom> | <spin>;
+public <command> = <look> | < downzoom> | <speed> | <goto>;
+<look> = look at (mars | earth);
 <goto> = go to (mars | earth);
 <zoom> = zoom (in | out);
-<spin> = spin (faster | slower);
+<speed> = speed up | slow down);
 `;
 				this.grammarList = new SpeechGrammarList();
 				this.grammarList.addFromString(grammar, 1);
@@ -120,15 +124,15 @@ public <command> = <goto> | <zoom> | <spin>;
 		  /* Edits */
 		  console.log("here you go: " + finalTranscript);
 		  console.log("inter: " + interimTranscript);
-		  //const remoteIP = '10.10.0.64';
-		  const remoteIP = 'localhost';
+		  const remoteIP = '10.10.0.64';
+		  //const remoteIP = 'localhost';
 		  const remotePROC = 'update';
 		  const remotePORT = '8080';
+		  const requestURL = `http://${remoteIP}:${remotePORT}/${remotePROC}`;
 		  const requestBODY = {
 			  command: finalTranscript
 		  };
-		  const requestURL = `http://${remoteIP}:${remotePORT}/${remotePROC}`;
-		  fetch(requestURL, {
+		  const requestMETHODS = {
 			  method: "POST",
 			  mode: "cors",
 			  cache: "no-cache",
@@ -136,11 +140,23 @@ public <command> = <goto> | <zoom> | <spin>;
 				  "Content-Type": "application/json; charset=utf-8"
 			  },
 			  body: JSON.stringify(requestBODY)
-		  });
+		  };
+		  
+		  fetch(requestURL, requestMETHODS)
+			.then(response => {
+				console.log(response);
+				lastCommand = finalTranscript;
+				this.setState({ finalTranscript, lastCommand });
+			})
+			.catch(error => {
+				console.log(error);
+				lastCommand = 'ERROR: command not sent';
+				this.setState({ finalTranscript, lastCommand });
+			});
+
 		  finalTranscript = '';
-		  //TODO:  run stopListening or abortListening at this point
 		  /********/
-        this.setState({ finalTranscript, interimTranscript })
+        this.setState({ finalTranscript, interimTranscript, lastCommand })
       }
 
       concatTranscripts(...transcriptParts) {
@@ -193,6 +209,8 @@ public <command> = <goto> | <zoom> | <spin>;
             transcript={transcript}
             recognition={recognition}
             browserSupportsSpeechRecognition={browserSupportsSpeechRecognition}
+			lastCommand={this.lastCommand}
+
             {...this.state}
             {...this.props} />
         )

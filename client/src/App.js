@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './App.css';
-//import BabbleAPI from './babbleapi.js';
-//import SpeechRecognition from 'react-speech-recognition';
 import SpeechRecognition from './SpeechRecognition.js';
 
 const speechOptions = {
@@ -10,7 +8,6 @@ const speechOptions = {
 }
 
 const propTypes = {
-  // Props injected by SpeechRecognition
 	transcript: PropTypes.string,
 	resetTranscript: PropTypes.func,
 	browserSupportsSpeechRecognition: PropTypes.bool,
@@ -21,32 +18,6 @@ const propTypes = {
 	finalTranscript: PropTypes.string,
 	recognition: PropTypes.object
 }
-//const babble = new BabbleAPI();
-//console.log(JSON.stringify(babble));
-
-/*
-class App extends Component {
-	render() {
-		return (
-		<div className="App">
-			<Introduction />
-			<SpeechInput />
-		</div>);
-	}
-}*/
-
-/*
-class App extends Component {
-	render() {
-		return (
-			<>
-			<h1>hello</h1>
-			<Example />
-			</>
-		);
-	}
-}
-*/
 
 class Babble extends Component {
 	render() {
@@ -59,21 +30,27 @@ class Babble extends Component {
 			listening,
 			interimTranscript,
 			finalTranscript,
-			recognition
+			recognition,
+			lastCommand
 		} = this.props;
 
 		if (!browserSupportsSpeechRecognition) {
-			return (<h1>ERROR</h1>);
+			return (<>
+				<Header />
+				<h1>ERROR</h1>
+				<Footer />
+			</>);
 		}
-				/*<span>{listening ? finalTranscript + interimTranscript : transcript}</span>*/
 
 		return (<>
 			<Header />
-			<div>
-				<button onClick={startListening}>Listen</button>
-				<button onClick={abortListening}>Stop</button>
-				<button onClick={resetTranscript}>Reset</button>
-				<span>{transcript}</span>
+			<div className="content">
+				<SpeechPanel
+					startListening={startListening}
+					abortListening={abortListening}
+					transcript={finalTranscript}
+					lastCommand={lastCommand}
+				/>
 			</div>
 			<Footer />
 		</>);
@@ -81,41 +58,39 @@ class Babble extends Component {
 }
 
 const Header = () => (
-	<h1>Welcome, Babblenaut</h1>
+	<div className="header">
+		<span className="pre-title">Welcome</span>
+		<span className="title">Babblenauts</span>
+	</div>
+);
+
+const SpeechPanel = props => (
+	<div className="speech-panel">
+		<div className="command-panel">
+			<button 
+				onClick={props.startListening} 
+				className="listener"
+				>Listen</button>
+			<button 
+				onClick={props.abortListening} 
+				className="stopper"
+				>Stop</button>
+		</div>
+		<span className="cmd-label">Current Command</span>
+		<span className="cmd current-cmd">{props.transcript}</span>
+		<span className="cmd-label">Last Command</span>
+		<span className="cmd last-cmd">{props.lastCommand}</span>
+	</div>
 );
 
 const Footer = () => (
-	<>
+	<div className="footer">
 		<hr />
-		<p>(c) Babblenauts, SpaceApps 2018.  Aditya, Connor, Tom</p>
-	</>
+		<div>(c) Babblenauts, SpaceApps 2018.  Aditya, Connor, Tom</div>
+	</div>
 );
 
 const App = SpeechRecognition(speechOptions)(Babble);
 App.propTypes = propTypes;
-
-/*
-class SpeechInput extends Component {
-	render() {
-		return (
-			<MicrophoneButton />
-		);
-	}
-}
-*/
-
-/*
-class MicrophoneButton extends Component {
-	componentDidMount() {
-		document.querySelector('.microphone-btn')
-			.addEventListener('click', babble.test);
-	}
-
-	render() {
-		return (
-		<button className="microphone-btn">Send Command</button>);
-	}
-}
-*/
 
 export default App;

@@ -1,3 +1,104 @@
-.App {
-  text-align: center;
+html {
+	background-image: url('lagoon-nebula.png');
+	background-size: cover;
+	animation: animatedBackground 1s linear infinite;
+}
+@keyframes animateBackground {
+	from {
+		background-position: 0 0;
+	}
+	to {
+		background-position: 100% 0;
+	}
+}
+
+#root {
+	display: flex;
+	flex-flow: column nowrap;
+}
+
+.header {
+	display: flex;
+	flex-flow: column nowrap;
+}
+.header span {
+	text-align: center;
+	font-family: Helvetica, sans-serif;
+	font-weight: 700;
+	color: #222222;
+	line-height: 54px;
+	text-shadow: 0px 0px 8px white;
+}
+.header .pre-title {
+	font-size: 48px;
+}
+.header .title {
+	font-size: 80px;
+}
+
+.content {
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+}
+.speech-panel {
+	display: flex;
+	flex-flow: column nowrap;
+	width: 480px;
+}
+.command-panel {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: center;
+}
+
+button {
+	width: 128px;
+	height: 64px;
+	border-radius: 4px;
+	border: 1px solid #222222;
+	box-shadow: 0px 6px 12px 4px #222222;
+	padding: 0;
+	margin: 16px;
+	font-family: Verdana, sans-serif;
+	font-size: 32px;
+}
+button.listener {
+
+}
+button.stopper {
+
+}
+
+.cmd {
+	margin: 8px 0px;
+	padding: 0px 16px;
+	min-height: 32px;
+	font-size: 32px;
+	border-left: 8px solid purple;
+	background-color: rgba(127, 189, 199, .8);
+}
+.current-cmd {
+}
+.last-cmd {
+}
+.cmd-label {
+	text-shadow: -2px 1px 4px black;
+	color: white;
+	font-weight: 700;
+}
+
+.footer {
+	dispay: flex;
+	flex-flow: column nowrap;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+.footer hr {
+	border-color: #444444;
+}
+.footer div {
+	margin: 8px;
 }
