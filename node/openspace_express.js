@@ -35,8 +35,8 @@ var current_asset_scale = current_asset_base + '.Scale.Scale';
 var asset_property = 'NavigationHandler.Origin';
 
 //Open Space connectivity details
-const open_space_ip = '10.10.0.122';
-//const open_space_ip = '10.10.0.63';
+//const open_space_ip = '10.10.0.122';
+const open_space_ip = '10.10.0.63';
 const open_space_port = 8000;
 
 
@@ -169,28 +169,43 @@ var gotomoon_regex = new RegExp('go\\sto\\sthe\\smoon|go\\sto\\smoon');
 var speedup_regex = new RegExp('speed\\s?up');
 var slowdown_regex = new RegExp('slow\\s?down');
 var driftaway_regex = new RegExp('drift\\saway');
+var lookatmars_regex = new RegExp('look\\s+at\\s+mars');
+var lookatmoon_regex = new RegExp('look\\s+at\\s+the\\s+moon');
 
 app.post('/update', (req, res) => {
 	console.log(req.body );
 	var command = req.body.command.toLowerCase();
 	if(zoomin_regex.exec(command) != null) {	//zoom in regex
-	    connection.startTopic('set', {property: current_asset_base + '.Scale.Scale', value: "" + (current_scale + 1)});
+		current_scale += 2;
+	    connection.startTopic('set', {property: current_asset_base + '.Scale.Scale', value: "" + current_scale});
 	    console.log("Set value of " + current_asset_base + " Scale to 3");
 	} else if(zoomout_regex.exec(command) != null ) {
-	    connection.startTopic('set', {property: current_asset_base + '.Scale.Scale', value: "" + (current_scale - 1)});
+		current_scale -= 2;
+	    connection.startTopic('set', {property: current_asset_base + '.Scale.Scale', value: "" + current_scale});
 	    console.log("Set value of " + current_asset_base + " Scale to 1");
 	} else if(gotomars_regex.exec(command) != null ) {
+	    connection.startTopic('set', {property: asset_property, value: "\"Mars\""});
+	    connection.startTopic('luascript', {script: 'openspace.globebrowsing.goToGeo(58.5877, 16.1924, 20000000);'});
+	    //connection.startTopic('set', {property: 'openspace.globebrowsing.goToGeo', [58.5877, 16.1924, 20000000] };
+	    console.log("Set value of " + asset_property + " set to Mars");
+	} else if(lookatmars_regex.exec(command) != null ) {
 	    connection.startTopic('set', {property: asset_property, value: "\"Mars\""});
 	    console.log("Set value of " + asset_property + " set to Mars");
 	} else if(gotomoon_regex.exec(command) != null ) {
 	    connection.startTopic('set', {property: asset_property, value: "\"Moon\""});
+	    connection.startTopic('luascript', {script: 'openspace.globebrowsing.goToGeo(58.5877, 16.1924, 20000000);'});
+	    //connection.startTopic('set', {property: 'openspace.globebrowsing.goToGeo', [58.5877, 16.1924, 20000000] };
+	    console.log("Set value of " + asset_property + " set to Moon");
+	} else if(lookatmoon_regex.exec(command) != null ) {
+	    connection.startTopic('set', {property: asset_property, value: "\"Moon\""});
 	    console.log("Set value of " + asset_property + " set to Moon");
 	} else if(speedup_regex.exec(command) != null ) {
-	    //connection.startTopic('set', {property: time_control_property, value: "Moon"});
+ 		connection.startTopic('luascript', {script: 'openspace.time.setDeltaTime(100000);'});
+		//connection.startTopic('set', {property: time_control_property, value: "Moon"});
 	    //console.log("Set value of " + time_control_property + " set to Moon");
 	} else if(slowdown_regex.exec(command) != null ) {
-	    //connection.startTopic('set', {property: time_control_property, value: "Moon"});
-	    //console.log("Set value of " + time_control_property + " set to Moon");
+		connection.startTopic('luascript', {script: 'openspace.time.setDeltaTime(1);'});
+		//console.log("Set value of " + time_control_property + " set to Moon");
 	} else if(driftaway_regex.exec(command) != null ) {
 	    //connection.startTopic('set', {property: time_control_property, value: "Moon"});
 	    //console.log("Set value of " + time_control_property + " set to Moon");
